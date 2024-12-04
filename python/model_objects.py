@@ -1,22 +1,21 @@
 from enum import Enum
 
-
 class Product:
     def __init__(self, name, unit):
         self.name = name
         self.unit = unit
 
+    def __repr__(self):
+        return f"Product(name={self.name}, unit={self.unit})"
 
 class ProductQuantity:
     def __init__(self, product, quantity):
         self.product = product
         self.quantity = quantity
 
-
 class ProductUnit(Enum):
     EACH = 1
     KILO = 2
-
 
 class SpecialOfferType(Enum):
     THREE_FOR_TWO = 1
@@ -29,7 +28,6 @@ class Offer:
         self.offer_type = offer_type
         self.product = product
         self.argument = argument
-
 
 class Discount:
     def __init__(self, product, description, discount_amount):

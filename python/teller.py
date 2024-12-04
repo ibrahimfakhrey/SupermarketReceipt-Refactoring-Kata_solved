@@ -1,9 +1,7 @@
 from model_objects import Offer
 from receipt import Receipt
 
-
 class Teller:
-
     def __init__(self, catalog):
         self.catalog = catalog
         self.offers = {}
@@ -13,8 +11,7 @@ class Teller:
 
     def checks_out_articles_from(self, the_cart):
         receipt = Receipt()
-        product_quantities = the_cart.items
-        for pq in product_quantities:
+        for pq in the_cart.items:
             p = pq.product
             quantity = pq.quantity
             unit_price = self.catalog.unit_price(p)

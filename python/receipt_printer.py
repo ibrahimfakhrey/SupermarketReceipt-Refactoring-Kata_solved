@@ -1,22 +1,18 @@
 from model_objects import ProductUnit
 
 class ReceiptPrinter:
-
     def __init__(self, columns=40):
         self.columns = columns
-  
+
     def print_receipt(self, receipt):
         result = ""
         for item in receipt.items:
-            receipt_item = self.print_receipt_item(item)
-            result += receipt_item
+            result += self.print_receipt_item(item)
 
         for discount in receipt.discounts:
-            discount_presentation = self.print_discount(discount)
-            result += discount_presentation
+            result += self.print_discount(discount)
 
-        result += "\n"
-        result += self.present_total(receipt)
+        result += "\n" + self.present_total(receipt)
         return str(result)
 
     def print_receipt_item(self, item):
@@ -28,22 +24,15 @@ class ReceiptPrinter:
         return line
 
     def format_line_with_whitespace(self, name, value):
-        line = name
         whitespace_size = self.columns - len(name) - len(value)
-        for i in range(whitespace_size):
-            line += " "
-        line += value
-        line += "\n"
+        line = f"{name}{' ' * whitespace_size}{value}\n"
         return line
 
     def print_price(self, price):
         return "%.2f" % price
 
     def print_quantity(self, item):
-        if ProductUnit.EACH == item.product.unit:
-            return str(item.quantity)
-        else:
-            return '%.3f' % item.quantity
+        return str(item.quantity) if ProductUnit.EACH == item.product.unit else '%.3f' % item.quantity
 
     def print_discount(self, discount):
         name = f"{discount.description} ({discount.product.name})"
