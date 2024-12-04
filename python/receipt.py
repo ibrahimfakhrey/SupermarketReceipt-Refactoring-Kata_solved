@@ -27,3 +27,11 @@ class Receipt:
     @property
     def discounts(self):
         return self._discounts[:]
+
+    def total_price(self):
+        total = 0
+        for item in self.items:
+            total += item.total_price  # Assuming item.total_price is updated with the discount
+        for discount in self.discounts:
+            total += discount.discount_amount  # Subtract discount amounts
+        return round(total, 2)

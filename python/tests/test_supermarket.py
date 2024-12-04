@@ -171,3 +171,86 @@ def test_no_special_offers():
     assert receipt.items[0].quantity == 3
     assert receipt.items[0].total_price == pytest.approx(3 * 2.49, 0.01)
 
+
+# Test the 20% discount on apples
+def test_twenty_percent_discount_on_apples():
+    catalog = FakeCatalog()
+    apple = Product("Apple", ProductUnit.KILO)
+    catalog.add_product(apple, 1.99)
+
+    teller = Teller(catalog)
+    teller.add_special_offer(SpecialOfferType.TEN_PERCENT_DISCOUNT, apple, 20)  # 20% discount
+
+    cart = ShoppingCart()
+    cart.add_item_quantity(apple, 2)
+
+    receipt = teller.checks_out_articles_from(cart)
+
+    # Check if discount is applied correctly (20% off)
+    assert receipt.total_price() == pytest.approx(2 * 1.99 * 0.8, 0.01)  # 20% off should be 2 * 1.99 * 0.8
+
+
+# Test the 10% discount on rice
+def test_ten_percent_discount_on_rice():
+    catalog = FakeCatalog()
+    rice = Product("Rice", ProductUnit.BAG)
+    catalog.add_product(rice, 2.49)
+
+    teller = Teller(catalog)
+    teller.add_special_offer(SpecialOfferType.TEN_PERCENT_DISCOUNT, rice, 10)  # 10% discount
+
+    cart = ShoppingCart()
+    cart.add_item_quantity(rice, 3)
+
+    receipt = teller.checks_out_articles_from(cart)
+
+    # Check if discount is applied correctly (10% off)
+    assert receipt.total_price() == pytest.approx(3 * 2.49 * 0.9, 0.01)  # 10% off
+
+
+def test_five_for_seven_forty_nine_toothpaste():
+    catalog = FakeCatalog()
+    toothpaste = Product("Toothpaste", ProductUnit.EACH)
+    catalog.add_product(toothpaste, 1.79)
+
+    teller = Teller(catalog)
+    teller.add_special_offer(SpecialOfferType.FIVE_FOR_AMOUNT, toothpaste, 7.49)  # Correct offer type
+
+    cart = ShoppingCart()
+    cart.add_item_quantity(toothpaste, 5)
+
+    receipt = teller.checks_out_articles_from(cart)
+    totla = 0
+    for item in receipt.items:
+        print(f"Product: {item.product.name}, Quantity: {item.quantity}, Total Price: {item.total_price}")
+        totla += item.total_price
+    print(f"this offer two and here is the total {totla}")
+
+    # Ensure that the total price is €7.49 for 5 tubes
+    assert totla == pytest.approx(7.49, 0.01)
+
+
+# Test the "Two boxes of cherry tomatoes for €0.99" offer
+def test_two_for_ninety_nine_cherry_tomatoes():
+    catalog = FakeCatalog()
+    cherry_tomatoes = Product("Cherry Tomatoes", ProductUnit.EACH)
+    catalog.add_product(cherry_tomatoes, 0.69)
+
+    teller = Teller(catalog)
+    teller.add_special_offer(SpecialOfferType.TWO_FOR_AMOUNT, cherry_tomatoes, 0.99)  # 2 boxes for 0.99
+
+    cart = ShoppingCart()
+    cart.add_item_quantity(cherry_tomatoes, 2)
+
+    receipt = teller.checks_out_articles_from(cart)
+    totla = 0
+    for item in receipt.items:
+        print(f"Product: {item.product.name}, Quantity: {item.quantity}, Total Price: {item.total_price}")
+        totla += item.total_price
+    print(f"this offer two and here is the total {totla}")
+    # Price should be €0.99 for 2 boxes
+    assert totla== pytest.approx(0.99, 0.01)
+    assert len(receipt.items) == 1  # Only one product in the receipt
+    assert receipt.items[0].product == cherry_tomatoes
+    assert receipt.items[0].quantity == 2
+    assert receipt.items[0].total_price == pytest.approx(0.99, 0.01)
