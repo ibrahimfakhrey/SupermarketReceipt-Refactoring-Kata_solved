@@ -71,6 +71,12 @@ ____________________________________________________________________
 pytest for testing.
 Notes
 Ensure you activate the venv environment every time before running or testing the application.
+____________________________________________________________________
+This command runs the full test suite to ensure all features are functioning as expected.
+pytest tests/ --maxfail=1 --disable-warnings -q
+____________________________________________________________________
+
+If you want to test specific features, you can specify the test file or function:
 If you encounter issues, verify that Python 3.10+ is installed and the venv is properly set up.
 License
 This project is licensed under the MIT License.
